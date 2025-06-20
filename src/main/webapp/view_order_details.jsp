@@ -23,7 +23,7 @@
     String custAddress = "";
 
     try {
-        conn = DBUtil.getConnection(); // ✅ Use DBUtil for connection
+        conn = DBUtil.getConnection(); // Use DBUtil for connection
 
         // Order summary query
         String orderSql = "SELECT o.*, c.custName, c.custPhone, c.custAddress FROM orders o "
@@ -112,7 +112,7 @@
                     try {
                         String itemsSql = "SELECT lp.packageName, oi.quantity, oi.pricePerUnit "
                                         + "FROM order_items oi "
-                                        + "JOIN laundryPackage lp ON oi.packageID = lp.packageID "
+                                        + "JOIN laundrypackage lp ON oi.packageID = lp.packageID "
                                         + "WHERE oi.orderID = ?";
                         stmt = conn.prepareStatement(itemsSql);
                         stmt.setInt(1, orderID);
