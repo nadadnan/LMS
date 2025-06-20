@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.com.DAO.DBUtil;
+import com.DAO.DBUtil;
 /**
  *
  * Author: NUR NADIYATUL HUSNA BINTI ADNAN (S65470)
