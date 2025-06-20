@@ -215,7 +215,7 @@
 
                 <button type="submit">Log In</button>
                 <a href="forgotPassword.jsp" class="forgot-password">Forgot password?</a>
-                <a href="cust_register.jsp" class="forgot-password">Register Now</a>
+                <a href="cust_register.jsp" class="forgot-password" style="color:blue;">Register Now</a>
             </form>
         </div>
 

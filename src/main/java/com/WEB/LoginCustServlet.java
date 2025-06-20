@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package java.com.WEB;
+package com.WEB;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -36,7 +36,7 @@ public class LoginCustServlet extends HttpServlet {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/LMS", "root", "admin");
+            conn = DriverManager.getConnection("jdbc:mysql://mysql.railway.internal:3306/lms", "root", "admin");
 
             String query = "SELECT * FROM customer WHERE custEmail = ? AND custPassword = ?";
             pst = conn.prepareStatement(query);
