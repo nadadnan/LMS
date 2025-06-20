@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.DAO.DBUtil;
+
 /**
  *
  * @author M S I
@@ -28,84 +30,72 @@ public class EditProfileCustServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         response.setContentType("text/html;charset=UTF-8");
-        
-        String custName = request.getParameter("custName");
-        String custPhone = request.getParameter("custPhone");
-        String custPassword = request.getParameter("custPassword");
-        String custAddress = request.getParameter("custAddress"); 
-        
+
         HttpSession session = request.getSession();
         String custEmail = (String) session.getAttribute("custEmail");
-        
+
         if (custEmail == null) {
             response.sendRedirect("cust_login.jsp");
             return;
         }
-    
-        //Connection conn = null;
-        //PreparedStatement stmt = null;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/LMS", "root", "admin")) {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Update to the correct driver class
-           
-        StringBuilder sqlBuilder = new StringBuilder("UPDATE customer SET");
+        String custName = request.getParameter("custName");
+        String custPhone = request.getParameter("custPhone");
+        String custPassword = request.getParameter("custPassword");
+        String custAddress = request.getParameter("custAddress");
+
+        StringBuilder sqlBuilder = new StringBuilder("UPDATE customer SET ");
         List<Object> parameters = new ArrayList<>();
 
-        if (custName != null) {
-            sqlBuilder.append(" custName = ?,");
-            parameters.add(custName);
+        if (custName != null && !custName.trim().isEmpty()) {
+            sqlBuilder.append("custName = ?, ");
+            parameters.add(custName.trim());
         }
-        if (custPhone != null) {
-            sqlBuilder.append(" custPhone = ?,");
-            parameters.add(custPhone);
+        if (custPhone != null && !custPhone.trim().isEmpty()) {
+            sqlBuilder.append("custPhone = ?, ");
+            parameters.add(custPhone.trim());
         }
-        if (custPassword != null) {
-            sqlBuilder.append(" custPassword = ?,");
-            parameters.add(custPassword);
+        if (custPassword != null && !custPassword.trim().isEmpty()) {
+            sqlBuilder.append("custPassword = ?, ");
+            parameters.add(custPassword.trim());
         }
-        if (custAddress != null) { // Add address update condition
-            sqlBuilder.append(" custAddress = ?,");
-            parameters.add(custAddress);
+        if (custAddress != null && !custAddress.trim().isEmpty()) {
+            sqlBuilder.append("custAddress = ?, ");
+            parameters.add(custAddress.trim());
         }
-        
-        // Remove the trailing comma and add the WHERE clause
-            if (parameters.isEmpty()) {
-                response.sendRedirect("cust_profile.jsp");
-                return;
-            }
 
-        sqlBuilder.deleteCharAt(sqlBuilder.length() - 1);
+        // No fields to update
+        if (parameters.isEmpty()) {
+            response.sendRedirect("profile.jsp");
+            return;
+        }
+
+        // Remove the last comma and add WHERE clause
+        sqlBuilder.setLength(sqlBuilder.length() - 2);
         sqlBuilder.append(" WHERE custEmail = ?");
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sqlBuilder.toString())) {
-                for (int i = 0; i < parameters.size(); i++) {
-                    stmt.setObject(i + 1, parameters.get(i));
-                }
-                stmt.setString(parameters.size() + 1, custEmail);
+        parameters.add(custEmail);
 
-                stmt.executeUpdate();
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sqlBuilder.toString())) {
+
+            for (int i = 0; i < parameters.size(); i++) {
+                stmt.setObject(i + 1, parameters.get(i));
             }
 
-            // Update session attributes if necessary
-            if (custName != null) {
-                session.setAttribute("custName", custName);
-            }
-            if (custPhone != null) {
-                session.setAttribute("custPhone", custPhone);
-            }
-            if (custPassword != null) {
-                session.setAttribute("custPassword", custPassword);
-            }
-            if (custAddress != null) {
-                session.setAttribute("custAddress", custAddress);
-            }
+            stmt.executeUpdate();
+
+            // Update session attributes
+            if (custName != null && !custName.trim().isEmpty()) session.setAttribute("custName", custName);
+            if (custPhone != null && !custPhone.trim().isEmpty()) session.setAttribute("custPhone", custPhone);
+            if (custPassword != null && !custPassword.trim().isEmpty()) session.setAttribute("custPassword", custPassword);
+            if (custAddress != null && !custAddress.trim().isEmpty()) session.setAttribute("custAddress", custAddress);
 
             response.sendRedirect("profile.jsp");
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Optionally, add user-friendly error handling
             response.sendRedirect("error.jsp");
         }
     }
