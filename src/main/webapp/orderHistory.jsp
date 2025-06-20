@@ -2,21 +2,20 @@
 <%@page import="javax.servlet.http.*"%>
 <%@page import="javax.servlet.*"%>
 <%@page import="com.Model.Orders"%>
+<%@ page import="java.util.*, java.sql.*, com.Model.Orders, com.DAO.DBUtil" %>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="java.sql.*"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-    // Redirect to login page if user is not logged in (custID not found in session)
     if (session == null || session.getAttribute("custID") == null) {
         response.sendRedirect("cust_login.jsp");
         return;
     }
 
-    String custID = (String) session.getAttribute("custID"); // Get logged-in customer's ID
+    String custID = (String) session.getAttribute("custID");
 
-    // Declare JDBC resources and lists to store orders
     Connection conn = null;
     PreparedStatement stmt = null;
     ResultSet rs = null;
@@ -24,17 +23,13 @@
     List<Orders> completedOrders = new ArrayList<>();
 
     try {
-        // Load MySQL JDBC Driver and establish DB connection
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/LMS", "root", "admin");
+        conn = DBUtil.getConnection(); // ✅ Use DBUtil here
 
-        // Prepare SQL to fetch orders for current customer
         String sql = "SELECT orderID, totalPrice, orderStatus FROM orders WHERE custID = ?";
         stmt = conn.prepareStatement(sql);
         stmt.setString(1, custID);
         rs = stmt.executeQuery();
 
-        // Loop through results and categorize orders into active or completed
         while (rs.next()) {
             Orders order = new Orders();
             order.setOrderID(rs.getInt("orderID"));
@@ -48,43 +43,31 @@
             }
         }
     } catch (Exception e) {
-        e.printStackTrace();  // Print any exception that occurs
+        e.printStackTrace();
     } finally {
-        // Close JDBC resources
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+        try { if (conn != null) conn.close(); } catch (Exception e) {}
     }
 %>
 
 <%!
-    // Custom method to fetch order item names and quantities by order ID
     public String getOrderDetails(int orderId) {
         StringBuilder details = new StringBuilder();
         Connection c = null;
         PreparedStatement ps = null;
         ResultSet r = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/LMS", "root", "admin");
+            c = com.DAO.DBUtil.getConnection(); // ✅ Use DBUtil here
 
-            // Join query to get item names and quantity for an order
-            String query = "SELECT packageName, quantity FROM order_details od JOIN laundryPackage lp ON od.packageID = lp.packageID WHERE od.orderID = ?";
+            String query = "SELECT lp.packageName, oi.quantity " +
+                           "FROM order_items oi " +
+                           "JOIN laundryPackage lp ON oi.packageID = lp.packageID " +
+                           "WHERE oi.orderID = ?";
             ps = c.prepareStatement(query);
             ps.setInt(1, orderId);
             r = ps.executeQuery();
 
-            // Append each item to a string (e.g., "Basic Wash (x2), Ironing (x1)")
             while (r.next()) {
                 String packageName = r.getString("packageName");
                 int quantity = r.getInt("quantity");
@@ -96,24 +79,14 @@
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // Close all JDBC resources
-            try {
-                if (r != null) {
-                    r.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (c != null) {
-                    c.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            try { if (r != null) r.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (c != null) c.close(); } catch (Exception e) {}
         }
-        return details.toString();  // Return the formatted string
+        return details.toString();
     }
 %>
+
 
 <!DOCTYPE html>
 <html lang="en">
