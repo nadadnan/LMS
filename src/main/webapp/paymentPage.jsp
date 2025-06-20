@@ -64,8 +64,8 @@ e6g9ugwz || 329ioiwj
                           "&billPriceSetting=1" +
                           "&billPayorInfo=1" +
                           "&billAmount=" + billAmount +
-                          "&billReturnUrl=" + URLEncoder.encode("http://localhost:8080/Laundry/paymentSuccess.jsp", "UTF-8") +
-                          "&billCallbackUrl=" + URLEncoder.encode("http://localhost:8080/Laundry/PaymentCallbackServlet", "UTF-8") +
+                          "&billReturnUrl=" + URLEncoder.encode("https://laundry.up.railway.app/paymentSuccess.jsp", "UTF-8") +
+                          "&billCallbackUrl=" + URLEncoder.encode("https://laundry.up.railway.app/PaymentCallbackServlet", "UTF-8") +
                           "&billExternalReferenceNo=" + URLEncoder.encode("ORDER" + orderID, "UTF-8") +
                           "&billTo=" + URLEncoder.encode(custName, "UTF-8") +
                           "&billEmail=" + URLEncoder.encode(custEmail, "UTF-8") +
@@ -132,10 +132,10 @@ e6g9ugwz || 329ioiwj
     <input type="number" name="billAmount" value="<%= billAmount %>" readonly><br>
 
     <label>Return URL:</label>
-    <input type="text" name="billReturnUrl" value="http://localhost:8080/Laundry/paymentSuccess.jsp" readonly><br>
+    <input type="text" name="billReturnUrl" value="https://laundry.up.railway.app/paymentSuccess.jsp" readonly><br>
 
     <label>Callback URL:</label>
-    <input type="text" name="billCallbackUrl" value="http://localhost:8080/Laundry/PaymentCallbackServlet" readonly><br>
+    <input type="text" name="billCallbackUrl" value="https://laundry.up.railway.app/PaymentCallbackServlet" readonly><br>
 
     <label>External Reference No:</label>
     <input type="text" name="billExternalReferenceNo" value="ORDER<%= orderID %>" readonly><br>

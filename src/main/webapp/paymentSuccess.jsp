@@ -1,4 +1,5 @@
 <%@ page import="java.sql.*" %>
+<%@ page import="com.DAO.DBUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -68,27 +69,28 @@
 
     double amountPaid = 0.0;
 
-    try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lms", "root", "admin");
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
 
+    try {
+        con = DBUtil.getConnection(); 
         int numericOrderID = Integer.parseInt(orderID.replaceAll("[^0-9]", ""));
 
         String query = "SELECT totalPrice FROM orders WHERE orderID = ?";
-        PreparedStatement ps = con.prepareStatement(query);
+        ps = con.prepareStatement(query);
         ps.setInt(1, numericOrderID);
-        ResultSet rs = ps.executeQuery();
+        rs = ps.executeQuery();
 
         if (rs.next()) {
             amountPaid = rs.getDouble("totalPrice");
         }
-
-        rs.close();
-        ps.close();
-        con.close();
-
     } catch (Exception e) {
         e.printStackTrace();
+    } finally {
+        try { if (rs != null) rs.close(); } catch (Exception ex) {}
+        try { if (ps != null) ps.close(); } catch (Exception ex) {}
+        try { if (con != null) con.close(); } catch (Exception ex) {}
     }
 %>
 
