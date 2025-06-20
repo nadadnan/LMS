@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.com.DAO.DBUtil;
 /**
  *
  * Author: NUR NADIYATUL HUSNA BINTI ADNAN (S65470)
@@ -35,17 +37,16 @@ public class LoginCustServlet extends HttpServlet {
         ResultSet rs = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://mysql.railway.internal:3306/lms", "root", "admin");
+            // ✅ Use your DBUtil
+            conn = DBUtil.getConnection();
 
             String query = "SELECT * FROM customer WHERE custEmail = ? AND custPassword = ?";
             pst = conn.prepareStatement(query);
             pst.setString(1, custEmail);
             pst.setString(2, custPassword);
             rs = pst.executeQuery();
-            
+
             if (rs.next()) {
-                // Store customer details in session
                 HttpSession session = request.getSession(true);
                 session.setAttribute("custID", rs.getString("custID"));
                 session.setAttribute("custName", rs.getString("custName"));
@@ -54,12 +55,12 @@ public class LoginCustServlet extends HttpServlet {
                 session.setAttribute("custPhone", rs.getString("custPhone"));
                 session.setAttribute("custAddress", rs.getString("custAddress"));
 
-                //response.sendRedirect("cust_dasboard1.jsp");
                 request.getRequestDispatcher("cust_dashboard1.jsp").forward(request, response);
             } else {
                 request.setAttribute("error", "Invalid email or password.");
                 request.getRequestDispatcher("cust_login.jsp").forward(request, response);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("error.jsp");
