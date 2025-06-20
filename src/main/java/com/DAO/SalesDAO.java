@@ -43,7 +43,7 @@ public class SalesDAO {
         String sql = "SELECT lp.packageName, COUNT(oi.packageID) AS timesOrdered, " +
                      "SUM(oi.quantity * lp.packagePrice) AS revenueGenerated " +
                      "FROM order_items oi " +
-                     "JOIN laundryPackage lp ON oi.packageID = lp.packageID " +
+                     "JOIN laundrypackage lp ON oi.packageID = lp.packageID " +
                      "GROUP BY lp.packageName " +
                      "ORDER BY revenueGenerated DESC";
 

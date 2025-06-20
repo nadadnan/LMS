@@ -85,7 +85,7 @@ public class SaveStaffServlet extends HttpServlet {
 
     private boolean sendEmail(String to, String staffName, String generatedPassword, String role) {
         final String from = "nadiyatulhusna14@gmail.com"; // Sender email
-        final String password = "colf wcdq wbds ojvj"; // App password
+        final String password = "woxu evve nect tcxj"; // App password
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
