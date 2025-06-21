@@ -8,67 +8,66 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+
 import javax.servlet.http.*;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.DAO.DBUtil;
 
 
 public class PaymentCallbackServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        System.out.println("PaymentCallbackServlet triggered");
+        System.out.println("PaymentCallbackServlet POST triggered");
 
         String billCode = request.getParameter("billcode");
         String transactionID = request.getParameter("transaction_id");
         String orderIDParam = request.getParameter("order_id");
+        String paymentStatus = request.getParameter("status");
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        // Validate parameters
-        if (billCode == null || transactionID == null || orderIDParam == null) {
+        // Debug logs
+        System.out.println("Received params:");
+        System.out.println("billcode: " + billCode);
+        System.out.println("transaction_id: " + transactionID);
+        System.out.println("order_id: " + orderIDParam);
+        System.out.println("status: " + paymentStatus);
+
+        // Validate required fields
+        if (billCode == null || transactionID == null || orderIDParam == null || paymentStatus == null) {
             out.println("Invalid request: missing parameters.");
             return;
         }
 
         try {
-            // Extract numeric orderID (e.g., ORDER241 -> 241)
-            int orderID = Integer.parseInt(orderIDParam.replaceAll("\\D", ""));
-
-            // Simulate ToyyibPay JSON callback (since it's a GET request here)
-            String responseJson = "[{\"billCode\":\"" + billCode + "\",\"transactionId\":\"" + transactionID + "\",\"order_id\":\"" + orderIDParam + "\",\"status\":\"1\"}]";
-            JSONArray jsonArray = new JSONArray(responseJson);
-            JSONObject transaction = jsonArray.getJSONObject(0);
-            String paymentStatus = transaction.getString("status");
+            int orderID = Integer.parseInt(orderIDParam.replaceAll("\\D", "")); // ORDER244 -> 244
 
             if ("1".equals(paymentStatus)) {
                 try (Connection con = DBUtil.getConnection()) {
 
-                    // Check if order exists
+                    // Check if the order exists
                     String checkOrderSQL = "SELECT * FROM orders WHERE orderID = ?";
                     try (PreparedStatement checkOrder = con.prepareStatement(checkOrderSQL)) {
                         checkOrder.setInt(1, orderID);
                         try (ResultSet rs = checkOrder.executeQuery()) {
                             if (!rs.next()) {
-                                out.println("Error: orderID " + orderID + " does not exist in orders table.");
+                                out.println("Error: orderID " + orderID + " does not exist.");
                                 return;
                             }
                         }
                     }
 
-                    // Check if payment for this transactionID already exists (to prevent duplicates)
+                    // Avoid duplicate payment records
                     String checkPaymentSQL = "SELECT * FROM payment WHERE transactionID = ?";
                     try (PreparedStatement checkPayment = con.prepareStatement(checkPaymentSQL)) {
                         checkPayment.setString(1, transactionID);
                         try (ResultSet rs = checkPayment.executeQuery()) {
                             if (rs.next()) {
-                                out.println("Payment already recorded for this transaction.");
+                                out.println("ℹ️ Payment already recorded.");
                                 return;
                             }
                         }
@@ -76,7 +75,7 @@ public class PaymentCallbackServlet extends HttpServlet {
 
                     // Insert payment record
                     String insertSQL = "INSERT INTO payment (orderID, transactionID, paymentStatus, paymentDate, paymentMethod) VALUES (?, ?, ?, ?, ?)";
-                    try (PreparedStatement ps = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
+                    try (PreparedStatement ps = con.prepareStatement(insertSQL)) {
                         ps.setInt(1, orderID);
                         ps.setString(2, transactionID);
                         ps.setString(3, "Completed");
@@ -92,10 +91,9 @@ public class PaymentCallbackServlet extends HttpServlet {
                     }
                 }
 
-                // Redirect to success page
                 response.sendRedirect("paymentSuccess.jsp?order_id=" + orderIDParam + "&transaction_id=" + transactionID);
             } else {
-                System.out.println("Payment status not successful.");
+                System.out.println("Payment not completed.");
                 response.sendRedirect("paymentFailed.jsp?order_id=" + orderIDParam + "&transaction_id=" + transactionID);
             }
 
@@ -105,13 +103,14 @@ public class PaymentCallbackServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response); // handle POST the same way as GET
+        // Optional: Let GET also work
+        doPost(request, response);
     }
 
     @Override
     public String getServletInfo() {
-        return "Handles ToyyibPay callback and updates payment records";
+        return "Handles ToyyibPay callback and stores payment in database";
     }
 }
