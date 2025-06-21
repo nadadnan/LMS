@@ -66,6 +66,8 @@
 <%
     String orderID = request.getParameter("order_id");
     String transactionID = request.getParameter("transaction_id");
+    String billcode = request.getParameter("billcode");
+    String status = request.getParameter("status_id");
 
     double amountPaid = 0.0;
 
@@ -106,6 +108,15 @@
 
     <a href="cust_dashboard1.jsp" class="btn">Go to Dashboard</a>
 </div>
+
+<!-- ✅ Temporary workaround to trigger the callback manually -->
+<% if (status != null && billcode != null && orderID != null && transactionID != null) { %>
+<script>
+    fetch("https://laundry.up.railway.app/PaymentCallbackServlet?status=<%= status %>&billcode=<%= billcode %>&order_id=<%= orderID %>&transaction_id=<%= transactionID %>")
+        .then(res => console.log("Callback manually triggered"))
+        .catch(err => console.error("Callback failed", err));
+</script>
+<% } %>
 
 </body>
 </html>
