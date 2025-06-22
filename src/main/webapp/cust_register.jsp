@@ -92,7 +92,8 @@
             }
 
             .login-form input,
-            .login-form textarea {
+            .login-form textarea,
+            .login-form select {
                 width: 100%;
                 padding: 0.5rem;
                 margin-bottom: 1rem;
@@ -100,6 +101,7 @@
                 border-radius: 4px;
                 outline: none;
             }
+
 
             .login-form button {
                 width: 100%;
@@ -216,21 +218,34 @@
                 <input type="text" id="custName" name="custName" placeholder="" required>
 
                 <label for="custPhone">Phone number:</label>
-                <p style="color:grey; font-size:13px;">example:0112345678 </p>
-                <input type="tel" id="custPhone" name="custPhone" placeholder="" pattern="[0-9]{10}" required>
+                <p style="color:grey; font-size:13px;">Example: 0112345678 (numbers only)</p>
+                <input type="tel" id="custPhone" name="custPhone" placeholder="" pattern="[0-9]{10,11}" required>
 
 
                 <label for="custAddress">Address</label>
-                <textarea id="custAddress" name="custAddress" placeholder="Enter your full address here" rows="4" cols="50" required></textarea>
+                <textarea id="custAddress" name="custAddress" placeholder="" rows="4" cols="50" required></textarea>
 
                 <label for="postalCode">Postal Code</label>
-                <input type="text" id="postalCode" name="postalCode" required>
+                <p style="color:grey; font-size:13px;">
+                    * We currently offer pickup and delivery services only to the following postal codes.
+                </p>
+                <select id="postalCode" name="postalCode" required>
+                    <option value="">-- Please select --</option>
+                    <option value="20680">20680</option>
+                    <option value="21020">21020</option>
+                    <option value="21030">21030</option>
+                    <option value="21060">21060</option>
+                    <option value="21080">21080</option>
+                    <option value="21100">21100</option>
+                    <option value="21300">21300</option>
+                </select>
+
 
                 <label for="custEmail">Email</label>
                 <input type="email" id="custEmail" name="custEmail" placeholder="" required>
 
                 <label for="custPassword">Password:</label>
-                <p style="color:grey; font-size:13px;">At least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
+                <p style="color:grey; font-size:13px;">Must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
                 <div class="password-toggle">
                     <input type="password" id="custPassword" name="custPassword" 
                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" 
@@ -258,7 +273,7 @@
 
 
                 <button type="submit">Register</button>
-                <a href="cust_login.jsp" class="forgot-password">Already have an account? Login</a>
+                <a href="cust_login.jsp" class="forgot-password">Already have an account? <strong>Login</strong></a>
             </form>
         </div>
 
@@ -295,7 +310,7 @@
 
         <%-- Display success modal if registration is successful --%>
         <% String status = (String) request.getAttribute("status");
-                if ("failed".equals(status)) { %>
+            if ("failed".equals(status)) { %>
         <div id="successModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>

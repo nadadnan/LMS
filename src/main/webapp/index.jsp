@@ -21,6 +21,9 @@
         <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="dist/css/adminlte.min.css">
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
         <style>
             /* General Styles */
             * {
@@ -208,41 +211,90 @@
                 justify-content: center;
             }
 
+            /* Hero Section */
             .hero-section {
                 background-image: url('dist/img/background/bg-home.jpg');
                 background-size: cover;
                 background-position: center;
-                flex: 1;
-                padding: 8rem 2rem;
-                text-align: left;
-                color: black;
+                position: relative;
                 min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                text-align: center;
+                color: #ffffff;
+                font-family: 'Poppins', sans-serif;
             }
 
-            .hero-section h2 {
-                font-size: 2.5rem;
-                font-weight: bold;
-                margin-top: 7rem;
-                margin-bottom: 1rem;
+            /* Overlay for better contrast */
+            .hero-section::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.4); /* dark overlay */
+                z-index: 0;
             }
 
-            .hero-section p {
-                font-size: 1.2rem;
-                margin-bottom: 2rem;
-            }
-
+            /* Make sure content is above overlay */
+            .hero-section h2,
+            .hero-section p,
             .cta-button {
-                background-color: black;
-                color: white;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Heading */
+            .hero-section h2 {
+                font-size: 3rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                line-height: 1.3;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+            }
+
+            /* Paragraph */
+            .hero-section p {
+                font-size: 1.25rem;
+                margin-bottom: 2rem;
+                max-width: 700px;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            }
+
+            /* Button */
+            .cta-button {
+                background-color: #ffffff;
+                color: #000000;
                 border: none;
                 padding: 0.8rem 2rem;
                 font-size: 1rem;
-                border-radius: 4px;
+                border-radius: 5px;
                 cursor: pointer;
+                transition: background 0.3s;
             }
 
             .cta-button:hover {
-                background-color: #333;
+                background-color: #dddddd;
+            }
+
+            /* Mobile styles */
+            @media (max-width: 768px) {
+                .hero-section h2 {
+                    font-size: 2rem;
+                }
+
+                .hero-section p {
+                    font-size: 1rem;
+                }
+
+                .cta-button {
+                    padding: 0.6rem 1.5rem;
+                    font-size: 0.95rem;
+                }
             }
 
             footer {
@@ -642,7 +694,7 @@
         <header id="navbar">
             <nav>
                 <h1>Coin Laundry</h1>
-                <!-- Hamburger Menu -->
+                <!-- navigation -->
                 <div class="hamburger" id="hamburger">&#9776;</div>
                 <ul class="nav-links" id="nav-links">
                     <li><a href="index.jsp">Home</a></li>
@@ -658,9 +710,6 @@
                         </ul>
                     </li>
                     <li><a href="#coverage-area">Coverage Area</a></li>
-                    <!--li><a href="#benefits">Benefits</a></li>
-                    
-                    <li><a href="#contact">Contact Us</a></li-->
                 </ul>
 
 
@@ -676,10 +725,13 @@
 
         <main>
             <div class="hero-section">
-                <h2>Because Your Time is Precious,<br> and Your Clothes are Too!</h2>
+                <h2>Because Your Time is Precious,<br>and Your Clothes are Too!</h2>
                 <p>From pick-up to drop-off, we've got every wash cycle covered.</p>
                 <a href="cust_login.jsp"><button class="cta-button">Book a pickup</button></a>
             </div>
+
+
+
 
             <!-- Service Section -->
             <section id="services">
@@ -689,45 +741,29 @@
                     <div class="service-grid">
                         <!-- Service 1: Wash & Fold -->
                         <div class="service-card">
-                            <img src="dist/img/background/wf.jpeg" alt="Wash & Fold Service">
-                            <h3>10 KG: Wash, Dry & Fold</h3>
-                            <h4>RM25</h4> 
-                            <p>Perfect for your everyday laundry needs. Suitable for 1-2 people.</p>
+                            <img src="dist/img/background/small-load.png" alt="Wash & Fold Service">
+                            <h3>Small Load</h3>
+                            <h4>RM18</h4> 
+                            <p>This is suitable for individuals or very small, quick washes. Some services even offer 1kg packages for single items or very small quantities.</p>
                         </div>
                         <div class="service-card">
-                            <img src="dist/img/background/wf.jpeg" alt="Wash & Fold Service">
-                            <h3>14 KG: Wash, Dry & Fold</h3>
-                            <h4>RM36</h4> 
-                            <p>Perfect for your everyday laundry needs. Suitable for 3-5 people.</p>
+                            <img src="dist/img/background/med-load.png" alt="Wash & Fold Service">
+                            <h3>Medium Load</h3>
+                            <h4>RM30</h4> 
+                            <p>This is a very popular size, often considered an "average" family-sized load. It's good for a typical weekly wash for 1-2 people.</p>
                         </div>
                         <div class="service-card">
-                            <img src="dist/img/background/wf.jpeg" alt="Wash & Fold Service">
-                            <h3>25 KG: Wash, Dry & Fold</h3>
-                            <h4>RM50</h4>                            
-                            <p>Perfect for your everyday laundry needs. Suitable for more than 5 people.</p>
+                            <img src="dist/img/background/large-load.png" alt="Wash & Fold Service">
+                            <h3>Large Load</h3>
+                            <h4>RM45</h4>                            
+                            <p>Ideal for larger households (3-5 people) or for washing bulkier items like duvets and blankets.</p>
                         </div>
-                        <!-- Service 2: Hand Wash >
                         <div class="service-card">
-                            <img src="dist/img/background/by_hand.jpg" alt="Hand Wash Service">
-                            <h3>Handwash, Dry & Fold</h3>
-                            <h4>RM5 per piece</h4>
-                            <p>Delicate fabrics need special care. Our hand wash service ensures your garments stay in pristine condition.</p>
+                            <img src="dist/img/background/med-load.png" alt="Wash & Fold Service">
+                            <h3>Extra-Large Load/Bulk Laundry: 13 kg and above (up to 20-25 kg or more)</h3>
+                            <h4>RM55</h4>                            
+                            <p>Caters to very large families, commercial clients, or those doing less frequent, large washes.</p>
                         </div>
-                        
-                        <div class="service-card">
-                            <img src="packageImages/fold1.jpg" alt="Dry Cleaning Service">
-                            <h3>Fold Only</h3>
-                            <h4>RM1 per piece</h4>
-                            <p>Bring in your clean and dried laundry, and we?ll expertly fold it for you, saving you time and effort!</p>
-                        </div>
-                        
-                        <div class="service-card">
-                            <img src="packageImages/iron1.jpeg" alt="Dry Cleaning Service">
-                            <h3>Ironing Only</h3>
-                            <h4>RM3 per piece</h4>
-                            <p>Bring in your clean clothes, and we?ll provide professional ironing to ensure they are wrinkle-free and perfectly pressed, ready to wear or store!</p>
-                        </div>
-                        <!-- Add more services as needed -->
                     </div>
                 </div>              
             </section>
@@ -836,82 +872,11 @@
                 </div>
             </div>
 
-            <!--div id="contact" class="contact-section" style="
-                 padding: 2rem 0;
-                 background-color: #f9f9f9;">
-                <div class="contact-container" style="
-                     max-width: 580px;
-                     margin: 0 auto;
-                     background-color: white;
-                     padding: 2rem;
-                     border-radius: 10px;
-                     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                    <h2 style="text-align: center; margin-bottom: 1rem;">Contact Us</h2>
-                    <p style="text-align: center; margin-bottom: 2rem; color: #555;">
-                        We love to hear from you! Please fill out the form below to get in touch.
-                    </p>
-                    <form action="/action_page.php" method="post" style="display: flex; flex-direction: column; gap: 1rem;">
-                        <div>
-                            <label for="name" style="display: block; margin-bottom: 0.5rem;">Name</label>
-                            <input type="text" id="name" name="name" placeholder="Your name.." style="
-                                   width: 100%;
-                                   padding: 0.8rem;
-                                   border: 1px solid #ccc;
-                                   border-radius: 5px;" 
-                                   required>
-                        </div>
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <div style="flex: 1;">
-                                <label for="email" style="display: block; margin-bottom: 0.5rem;">Email</label>
-                                <input type="email" id="email" name="email" placeholder="Your email.." style="
-                                       width: 100%;
-                                       padding: 0.8rem;
-                                       border: 1px solid #ccc;
-                                       border-radius: 5px;" 
-                                       required>
-                            </div>
-                            <div style="flex: 1;">
-                                <label for="phone" style="display: block; margin-bottom: 0.5rem;">Phone number</label>
-                                <input type="tel" id="phone" name="phone" placeholder="011-123456789" pattern="[0-9]{3}-[0-9]{7}" required style="
-                                       width: 100%;
-                                       padding: 0.8rem;
-                                       border: 1px solid #ccc;
-                                       border-radius: 5px;" 
-                                       required>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="message" style="display: block; margin-bottom: 0.5rem;">Message</label>
-                            <textarea id="message" name="message" placeholder="Write something..." style="
-                                      width: 100%;
-                                      padding: 0.8rem;
-                                      border: 1px solid #ccc;
-                                      border-radius: 5px;
-                                      height: 150px;" 
-                                      required></textarea>
-                        </div>
-                        <div style="text-align: right;">
-                            <input type="submit" value="Submit" style="
-                                   padding: 0.8rem 1.5rem;
-                                   background-color: #333;
-                                   color: white;
-                                   border: none;
-                                   border-radius: 5px;
-                                   cursor: pointer;">
-                        </div>
-                    </form>
-                </div>
-            </div-->
-
-
-
-
-
         </main>
 
         <footer>
             <div class="social-icons">
-                <a href="#" style="color: white;"><i class="fa fa-facebook-f" style="font-size:24px"></i></a>
+                <a href="https://www.facebook.com/PTCoinLaundry/" style="color: white;"><i class="fa fa-facebook-f" style="font-size:24px"></i></a>
                 <a href="#" style="color: white;"><i class="fa fa-twitter" style="font-size:24px"></i></a>
                 <a href="#" style="color: white;"><i class="fa fa-youtube-play" style="font-size:24px"></i></a>
                 <a href="#" style="color: white;"><i class="fa fa-instagram" style="font-size:24px"></i></a>
