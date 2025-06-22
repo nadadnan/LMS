@@ -579,9 +579,11 @@
 
             .service-card img {
                 width: 100%;
-                height: 200px;
-                object-fit: cover;
+                height: auto;
+                object-fit: contain;
+                padding: 1rem;
             }
+
 
             .service-card h3 {
                 font-size: 1.5rem;
@@ -699,15 +701,15 @@
                 <ul class="nav-links" id="nav-links">
                     <li><a href="index.jsp">Home</a></li>
                     <li class="dropdown">
-                        <a href="#pricing">
+                        <a href="#services">
                             Service and Pricing 
-                            <i class="fa fa-caret-down"></i> <!-- Add an icon here -->
+                            <!--i class="fa fa-caret-down"></i> <!-- Add an icon here -->
                         </a>
-                        <ul class="sub-nav">
-                            <li><a href="#wash-fold">Wash & Fold</a></li>
-                            <li><a href="#handwash">Hand Wash</a></li>
-                            <li><a href="#dryclean">Dry Clean</a></li>
-                        </ul>
+                        <!--ul class="sub-nav">
+                            <li><a href="#services">Wash & Fold</a></li>
+                            <li><a href="#services">Hand Wash</a></li>
+                            <li><a href="#services">Dry Clean</a></li>
+                        </ul-->
                     </li>
                     <li><a href="#coverage-area">Coverage Area</a></li>
                 </ul>
@@ -737,14 +739,14 @@
             <section id="services">
                 <div class="services-container">
                     <h2 class="section-title">Our Services</h2>
-                    <p class="section-description">Discover a range of professional laundry services designed to save your time and give your clothes the care they deserve.</p>
+                    <p class="section-description">Discover a range of professional laundry services designed to save your time and give your clothes the care they deserve. Please note: Pickup and delivery charges are not included in the listed prices.</p>
                     <div class="service-grid">
                         <!-- Service 1: Wash & Fold -->
                         <div class="service-card">
                             <img src="dist/img/background/small-load.png" alt="Wash & Fold Service">
                             <h3>Small Load</h3>
                             <h4>RM18</h4> 
-                            <p>This is suitable for individuals or very small, quick washes. Some services even offer 1kg packages for single items or very small quantities.</p>
+                            <p>This is suitable for individuals or very small, quick washes.</p>
                         </div>
                         <div class="service-card">
                             <img src="dist/img/background/med-load.png" alt="Wash & Fold Service">
@@ -760,7 +762,7 @@
                         </div>
                         <div class="service-card">
                             <img src="dist/img/background/med-load.png" alt="Wash & Fold Service">
-                            <h3>Extra-Large Load/Bulk Laundry: 13 kg and above (up to 20-25 kg or more)</h3>
+                            <h3>Extra-Large Load</h3>
                             <h4>RM55</h4>                            
                             <p>Caters to very large families, commercial clients, or those doing less frequent, large washes.</p>
                         </div>
@@ -876,7 +878,9 @@
 
         <footer>
             <div class="social-icons">
-                <a href="https://www.facebook.com/PTCoinLaundry/" style="color: white;"><i class="fa fa-facebook-f" style="font-size:24px"></i></a>
+                <a href="https://www.facebook.com/PTCoinLaundry/" target="_blank" style="color: white;">
+                    <i class="fa fa-facebook-f" style="font-size:24px"></i>
+                </a>
                 <a href="#" style="color: white;"><i class="fa fa-twitter" style="font-size:24px"></i></a>
                 <a href="#" style="color: white;"><i class="fa fa-youtube-play" style="font-size:24px"></i></a>
                 <a href="#" style="color: white;"><i class="fa fa-instagram" style="font-size:24px"></i></a>
