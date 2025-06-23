@@ -91,6 +91,7 @@ public class SavePackageServlet extends HttpServlet {
             try {
                 conn = DBUtil.getConnection();
                 String sql = "INSERT INTO laundrypackage (packageName, packageDesc, packagePrice, packageImage) VALUES (?, ?, ?, ?)";
+                
                 pst = conn.prepareStatement(sql);
                 pst.setString(1, packageName);
                 pst.setString(2, packageDesc);
