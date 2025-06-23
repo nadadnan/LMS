@@ -43,7 +43,7 @@ public class EditPackageServlet2 extends HttpServlet {
 
             if (fileName != null && !fileName.isEmpty()) {
                 // Use relative path based on webapp context
-                String savePath = request.getServletContext().getRealPath("/packageImages");
+                String savePath = "C:\\CSF4984 FINAL YEAR PROJECT I\\code\\LaundrySystem\\src\\main\\webapp\\packageImages";
                 File fileSaveDir = new File(savePath);
                 if (!fileSaveDir.exists()) {
                     fileSaveDir.mkdirs();
