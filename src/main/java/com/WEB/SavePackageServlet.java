@@ -4,13 +4,15 @@
  */
 package com.WEB;
 
-import com.DAO.laundryPackageDAO;
 import com.Model.laundryPackage;
+import com.DAO.DBUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -21,9 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-/**
- * SavePackageServlet handles saving package details including file uploads.
- */
 @WebServlet(name = "SavePackageServlet", urlPatterns = {"/SavePackageServlet"})
 @MultipartConfig // Enables file upload handling
 public class SavePackageServlet extends HttpServlet {
@@ -34,7 +33,7 @@ public class SavePackageServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         LOGGER.log(Level.INFO, "SavePackageServlet invoked.");
-        
+
         try (PrintWriter out = response.getWriter()) {
             // Fetch form data
             String packageName = request.getParameter("packageName");
@@ -84,22 +83,35 @@ public class SavePackageServlet extends HttpServlet {
                 return;
             }
 
-            // Save package data to the database
-            laundryPackage e = new laundryPackage();
-            e.setPackageName(packageName);
-            e.setPackageDesc(packageDesc);
-            e.setPackagePrice(packagePrice);
-            e.setPackageImage(fileName);
-
+            // Save to database using DBUtil
             int status = 0;
+            Connection conn = null;
+            PreparedStatement pst = null;
+
             try {
-                status = laundryPackageDAO.save(e);
+                conn = DBUtil.getConnection();
+                String sql = "INSERT INTO laundrypackage (packageName, packageDesc, packagePrice, packageImage) VALUES (?, ?, ?, ?)";
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, packageName);
+                pst.setString(2, packageDesc);
+                pst.setDouble(3, packagePrice);
+                pst.setString(4, fileName);
+
+                status = pst.executeUpdate();
             } catch (Exception ex) {
                 LOGGER.log(Level.SEVERE, "Database save failed: " + ex.getMessage(), ex);
                 out.println("<script>alert('Failed to save record in the database.'); window.history.back();</script>");
                 return;
+            } finally {
+                try {
+                    if (pst != null) pst.close();
+                    if (conn != null) conn.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
+            // Handle result
             if (status > 0) {
                 LOGGER.log(Level.INFO, "Record saved successfully.");
                 out.println("<script>alert('Record saved successfully!'); window.location.href = 'managePackage.jsp';</script>");
