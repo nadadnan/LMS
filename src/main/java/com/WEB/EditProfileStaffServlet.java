@@ -8,6 +8,7 @@ import com.DAO.DBUtil;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -40,7 +41,23 @@ public class EditProfileStaffServlet extends HttpServlet {
         String staffName = request.getParameter("staffName");
         String staffPhone = request.getParameter("staffPhone");
         String staffPassword = request.getParameter("staffPassword");
-        
+
+        // If password is empty, fetch the existing one from the DB
+        if (staffPassword == null || staffPassword.trim().isEmpty()) {
+            try (Connection conn = DBUtil.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement("SELECT staffPassword FROM staff WHERE staffEmail = ?")) {
+                stmt.setString(1, staffEmail);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    staffPassword = rs.getString("staffPassword"); // fallback to existing password
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("error.jsp");
+                return;
+            }
+        }
+
         StringBuilder sqlBuilder = new StringBuilder("UPDATE staff SET ");
         List<Object> parameters = new ArrayList<>();
 
@@ -52,18 +69,12 @@ public class EditProfileStaffServlet extends HttpServlet {
             sqlBuilder.append("staffPhone = ?, ");
             parameters.add(staffPhone.trim());
         }
-        if (staffPassword != null && !staffPassword.trim().isEmpty()) {
-            sqlBuilder.append("staffPassword = ?, ");
-            parameters.add(staffPassword.trim());
-        }
 
-        // No fields to update
-        if (parameters.isEmpty()) {
-            response.sendRedirect("staff_profile.jsp");
-            return;
-        }
+        // Password is always present now
+        sqlBuilder.append("staffPassword = ?, ");
+        parameters.add(staffPassword.trim());
 
-        // Remove the last comma and add WHERE clause
+        // Remove last comma
         sqlBuilder.setLength(sqlBuilder.length() - 2);
         sqlBuilder.append(" WHERE staffEmail = ?");
         parameters.add(staffEmail);
@@ -77,10 +88,10 @@ public class EditProfileStaffServlet extends HttpServlet {
 
             stmt.executeUpdate();
 
-            // Update session attributes
+            // Always update session attributes
             if (staffName != null && !staffName.trim().isEmpty()) session.setAttribute("staffName", staffName);
             if (staffPhone != null && !staffPhone.trim().isEmpty()) session.setAttribute("staffPhone", staffPhone);
-            if (staffPassword != null && !staffPassword.trim().isEmpty()) session.setAttribute("staffPassword", staffPassword);
+            session.setAttribute("staffPassword", staffPassword); // always set, even if old password
 
             response.sendRedirect("staff_profile.jsp");
 
@@ -90,9 +101,6 @@ public class EditProfileStaffServlet extends HttpServlet {
         }
     }
     
-    
-    
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
