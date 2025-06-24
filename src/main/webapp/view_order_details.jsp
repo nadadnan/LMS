@@ -112,7 +112,7 @@
                     try {
                         String itemsSql = "SELECT lp.packageName, oi.quantity, oi.pricePerUnit "
                                         + "FROM order_items oi "
-                                        + "JOIN laundrypackage lp ON oi.packageID = lp.packageID "
+                                        + "JOIN laundryPackage lp ON oi.packageID = lp.packageID "
                                         + "WHERE oi.orderID = ?";
                         stmt = conn.prepareStatement(itemsSql);
                         stmt.setInt(1, orderID);

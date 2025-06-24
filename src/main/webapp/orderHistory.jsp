@@ -58,7 +58,7 @@
         PreparedStatement ps = null;
         ResultSet r = null;
         try {
-            c = com.DAO.DBUtil.getConnection(); // ✅ Use DBUtil here
+            c = com.DAO.DBUtil.getConnection(); // Use DBUtil here
 
             String query = "SELECT lp.packageName, oi.quantity " +
                            "FROM order_items oi " +

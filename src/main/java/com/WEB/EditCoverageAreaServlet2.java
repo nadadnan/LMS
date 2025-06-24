@@ -34,14 +34,14 @@ public class EditCoverageAreaServlet2 extends HttpServlet {
 
             int status = customerDAO.update(area); // DAO method to update the record
             if (status > 0) {
-                out.print("<script>alert('Record updated successfully!');</script>");
-                request.getRequestDispatcher("coverageArea.jsp").include(request, response);
+                request.setAttribute("message", "Record updated successfully!");
+                request.getRequestDispatcher("coverageArea.jsp").forward(request, response);
             } else {
-                out.print("<script>alert('Sorry! Unable to update record.');</script>");
-                request.getRequestDispatcher("coverageArea.jsp").include(request, response);
+                request.setAttribute("message", "Sorry! Unable to update record.");
+                request.getRequestDispatcher("coverageArea.jsp").forward(request, response);
             }
         } catch (Exception e) {
-            out.print("<script>alert('Error: " + e.getMessage() + "');</script>");
+            request.setAttribute("message", "Error: " + e.getMessage());
             request.getRequestDispatcher("coverageArea.jsp").include(request, response);
         } finally {
             out.close();
