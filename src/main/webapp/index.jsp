@@ -729,10 +729,9 @@
             <div class="hero-section">
                 <h2>Because Your Time is Precious,<br>and Your Clothes are Too!</h2>
                 <p>From pick-up to drop-off, we've got every wash cycle covered.</p>
+                <p style="font-weight: bold;">Laundry done within 2 hours!</p>
                 <a href="cust_login.jsp"><button class="cta-button">Book a pickup</button></a>
             </div>
-
-
 
 
             <!-- Service Section -->

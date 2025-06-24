@@ -134,7 +134,7 @@
             </div>
 
             <div class="form-group">
-                <label for="pickupTime">Choose Pickup Time:</label>
+                <label for="pickupTime">Choose Pickup Time:</label> <small class="form-text text-muted">Laundry will be completed within 2 hours after pickup.</small>
                 <select name="pickupTime" id="pickupTime" class="form-control" required>
                     <option value="08:00:00">8:00 AM</option>
                     <option value="09:00:00">9:00 AM</option>
@@ -147,7 +147,7 @@
                     <option value="16:00:00">4:00 PM</option>
                 </select>
             </div>
-
+                    
             <form action="UpdateCartServlet" method="post">
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -190,7 +190,7 @@
                     <h3 class="total-price">Grand Total: RM <%= cart.getTotalPrice() + 10 %></h3>
                 </div>
             </form>
-
+                
             <form action="SaveOrderServlet" method="post" class="mt-3">
                 <input type="hidden" name="custID" value="${sessionScope.customer.custID}" />
                 <input type="hidden" name="pickupDate" id="hiddenPickupDate">

@@ -26,7 +26,6 @@ public class PaymentCallbackServlet extends HttpServlet {
         String transactionID = request.getParameter("transaction_id");
         String orderIDParam = request.getParameter("order_id");
         String paymentStatus = request.getParameter("status");
-        Double paymentAmount = Double.parseDouble(request.getParameter("paymentAmount"));
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -39,7 +38,7 @@ public class PaymentCallbackServlet extends HttpServlet {
         System.out.println("status: " + paymentStatus);
 
         // Validate required fields
-        if (billCode == null || transactionID == null || orderIDParam == null || paymentStatus == null || paymentAmount == null) {
+        if (billCode == null || transactionID == null || orderIDParam == null || paymentStatus == null) {
             out.println("Invalid request: missing parameters.");
             return;
         }
@@ -75,14 +74,13 @@ public class PaymentCallbackServlet extends HttpServlet {
                     }
 
                     // Insert payment record
-                    String insertSQL = "INSERT INTO payment (orderID, transactionID, paymentStatus, paymentDate, paymentMethod, paymentAmount) VALUES (?, ?, ?, ?, ?, ?)";
+                    String insertSQL = "INSERT INTO payment (orderID, transactionID, paymentStatus, paymentDate, paymentMethod) VALUES (?, ?, ?, ?, ?)";
                     try (PreparedStatement ps = con.prepareStatement(insertSQL)) {
                         ps.setInt(1, orderID);
                         ps.setString(2, transactionID);
                         ps.setString(3, "Completed");
                         ps.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
                         ps.setString(5, "ToyyibPay");
-                        ps.setDouble(6, paymentAmount);
 
                         int rowsInserted = ps.executeUpdate();
                         if (rowsInserted > 0) {
