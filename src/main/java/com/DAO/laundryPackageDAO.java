@@ -113,7 +113,7 @@ public class laundryPackageDAO {
         List<laundryPackage> laundryPackages = new ArrayList<>();
         try {
             Connection conn = DBUtil.getConnection();
-            PreparedStatement ps = conn.prepareStatement("select * from laundrypackage");
+            PreparedStatement ps = conn.prepareStatement("select * from laundryPackage");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
