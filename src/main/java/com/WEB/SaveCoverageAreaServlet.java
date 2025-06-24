@@ -62,9 +62,7 @@ public class SaveCoverageAreaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        List<String> validPostalCodes = customerDAO.getValidPostalCodes(); // Fetch from DB
-        request.getSession().setAttribute("validPostalCodes", validPostalCodes);
+        PrintWriter out = response.getWriter();
 
         try {
             // Retrieve form data
@@ -75,29 +73,30 @@ public class SaveCoverageAreaServlet extends HttpServlet {
             c.setPostal_code(postal_code);
             c.setArea_name(area_name);
 
-            // Save Customer to DB
+            // Save to DB
             int status = customerDAO.saveCoverageArea(c);
 
-            // Redirect or display message based on status
             if (status > 0) {
-                // Successful registration
-                request.setAttribute("status", "success");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("coverageArea.jsp");
-                dispatcher.forward(request, response);
+                // Show alert and redirect
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Coverage area added successfully!');");
+                out.println("window.location.href = 'coverageArea.jsp';");
+                out.println("</script>");
             } else {
-                // Registration failed
-                request.setAttribute("status", "failed");
-                response.getWriter().println("<h3>Add new Failed. Please try again!</h3>");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("coverageArea.jsp");
-                dispatcher.forward(request, response);
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Failed to add coverage area. Please try again.');");
+                out.println("window.location.href = 'coverageArea.jsp';");
+                out.println("</script>");
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("message", "Error: " + e.getMessage());
-            request.getRequestDispatcher("manager_dashboard.jsp").forward(request, response);
+            out.println("<script type='text/javascript'>");
+            out.println("alert('Error: " + e.getMessage().replace("'", "\\'") + "');");
+            out.println("window.location.href = 'coverageArea.jsp';");
+            out.println("</script>");
+        } finally {
+            out.close();
         }
-
     }
 
     /**
