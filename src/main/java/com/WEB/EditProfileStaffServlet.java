@@ -4,6 +4,7 @@
  */
 package com.WEB;
 
+import com.DAO.DBUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -36,69 +37,66 @@ public class EditProfileStaffServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         response.setContentType("text/html;charset=UTF-8");
-        
-        String staffName = request.getParameter("staffName");
-        String staffPhone = request.getParameter("staffPhone");
-        String staffPassword = request.getParameter("staffPassword");
-        
+
         HttpSession session = request.getSession();
         String staffEmail = (String) session.getAttribute("staffEmail");
-        
+
         if (staffEmail == null) {
             response.sendRedirect("staff_login.jsp");
             return;
         }
 
+        String staffName = request.getParameter("staffName");
+        String staffPhone = request.getParameter("staffPhone");
+        String staffPassword = request.getParameter("staffPassword");
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/LMS", "root", "admin")) {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Update to the correct driver class
-            
-        StringBuilder sqlBuilder = new StringBuilder("UPDATE staff SET");
+        StringBuilder sqlBuilder = new StringBuilder("UPDATE staff SET ");
         List<Object> parameters = new ArrayList<>();
 
-        if (staffName != null) {
-            sqlBuilder.append(" staffName = ?,");
-            parameters.add(staffName);
+        if (staffName != null && !staffName.trim().isEmpty()) {
+            sqlBuilder.append("staffName = ?, ");
+            parameters.add(staffName.trim());
         }
-        if (staffPhone != null) {
-            sqlBuilder.append(" staffPhone = ?,");
-            parameters.add(staffPhone);
+        if (staffPhone != null && !staffPhone.trim().isEmpty()) {
+            sqlBuilder.append("staffPhone = ?, ");
+            parameters.add(staffPhone.trim());
         }
-        if (staffPassword != null) {
-            sqlBuilder.append(" staffPassword = ?,");
-            parameters.add(staffPassword);
+        if (staffPassword != null && !staffPassword.trim().isEmpty()) {
+            sqlBuilder.append("staffPassword = ?, ");
+            parameters.add(staffPassword.trim());
         }
 
-        // Remove the trailing comma and add the WHERE clause
-        sqlBuilder.deleteCharAt(sqlBuilder.length() - 1);
+        // No fields to update
+        if (parameters.isEmpty()) {
+            response.sendRedirect("staff_profile.jsp");
+            return;
+        }
+
+        // Remove last comma and space, then append WHERE clause
+        sqlBuilder.setLength(sqlBuilder.length() - 2);
         sqlBuilder.append(" WHERE staffEmail = ?");
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sqlBuilder.toString())) {
-                for (int i = 0; i < parameters.size(); i++) {
-                    stmt.setObject(i + 1, parameters.get(i));
-                }
-                stmt.setString(parameters.size() + 1, staffEmail);
+        parameters.add(staffEmail);
 
-                stmt.executeUpdate();
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sqlBuilder.toString())) {
+
+            for (int i = 0; i < parameters.size(); i++) {
+                stmt.setObject(i + 1, parameters.get(i));
             }
 
-            // Update session attributes if necessary
-            if (staffName != null) {
-                session.setAttribute("staffName", staffName);
-            }
-            if (staffPhone != null) {
-                session.setAttribute("staffPhone", staffPhone);
-            }
-            if (staffPassword != null) {
-                session.setAttribute("staffPassword", staffPassword);
-            }
+            stmt.executeUpdate();
+
+            // Update session attributes
+            if (staffName != null && !staffName.trim().isEmpty()) session.setAttribute("staffName", staffName);
+            if (staffPhone != null && !staffPhone.trim().isEmpty()) session.setAttribute("staffPhone", staffPhone);
+            if (staffPassword != null && !staffPassword.trim().isEmpty()) session.setAttribute("staffPassword", staffPassword);
 
             response.sendRedirect("staff_profile.jsp");
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Optionally, add user-friendly error handling
             response.sendRedirect("error.jsp");
         }
     }

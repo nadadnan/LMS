@@ -761,7 +761,7 @@
                             <p>Ideal for larger households (3-5 people) or for washing bulkier items like duvets and blankets.</p>
                         </div>
                         <div class="service-card">
-                            <img src="dist/img/background/med-load.png" alt="Wash & Fold Service">
+                            <img src="dist/img/background/xl-load.png" alt="Wash & Fold Service">
                             <h3>Extra-Large Load</h3>
                             <h4>RM55</h4>                            
                             <p>Caters to very large families, commercial clients, or those doing less frequent, large washes.</p>
