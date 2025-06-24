@@ -227,7 +227,7 @@
                                         <th>Pickup Time</th>
                                         <!--th>Quantity</th-->
                                         <th>Total Price (RM)</th>
-                                        <th>Payment Status</th>
+                                        
                                         <th>Order Status</th>
                                         <th>Assigned Staff</th>
                                         <!--th>Assign Staff</th-->
@@ -250,7 +250,7 @@
                                         <td><%= order.getPickupTime()%></td>
                                         <!--td><%= order.getQuantity()%></td-->
                                         <td><%= order.getTotalPrice()%></td>
-                                        <td><%= order.getPaymentStatus()%></td>
+                                        
                                         <td><%= order.getOrderStatus()%></td>
                                         <td>
     <%
