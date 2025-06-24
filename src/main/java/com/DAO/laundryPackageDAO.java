@@ -22,7 +22,7 @@ public class laundryPackageDAO {
         int status = 0;
         try (Connection con = DBUtil.getConnection()) {
             if (con != null) {
-                PreparedStatement ps = con.prepareStatement("INSERT INTO laundrypackage(packageName, packageDesc, packagePrice, packageImage) VALUES (?, ?, ?, ?)");
+                PreparedStatement ps = con.prepareStatement("INSERT INTO laundryPackage(packageName, packageDesc, packagePrice, packageImage) VALUES (?, ?, ?, ?)");
                 ps.setString(1, e.getPackageName());
                 ps.setString(2, e.getPackageDesc());
                 ps.setDouble(3, e.getPackagePrice());
@@ -44,7 +44,7 @@ public class laundryPackageDAO {
         int status = 0;
         try (Connection con = DBUtil.getConnection()) {
             if (con != null) {
-                String query = "UPDATE laundrypackage SET packageName=?, packageDesc=?, packagePrice=?, packageImage=? WHERE packageID=?";
+                String query = "UPDATE laundryPackage SET packageName=?, packageDesc=?, packagePrice=?, packageImage=? WHERE packageID=?";
                 PreparedStatement ps = con.prepareStatement(query);
                 ps.setString(1, pack.getPackageName());
                 ps.setString(2, pack.getPackageDesc());
@@ -70,7 +70,7 @@ public class laundryPackageDAO {
         int status = 0;
         try (Connection con = DBUtil.getConnection()) {
             if (con != null) {
-                PreparedStatement ps = con.prepareStatement("DELETE FROM laundrypackage WHERE packageID = ?");
+                PreparedStatement ps = con.prepareStatement("DELETE FROM laundryPackage WHERE packageID = ?");
                 ps.setString(1, packageID);
                 status = ps.executeUpdate();
                 ps.close();
@@ -88,7 +88,7 @@ public class laundryPackageDAO {
         System.out.println("Product id i ngetMenuById :" + packageID);
         try (Connection con = DBUtil.getConnection()) {
             if (con != null) {
-                PreparedStatement ps = con.prepareStatement("SELECT * FROM laundrypackage WHERE packageID=?");
+                PreparedStatement ps = con.prepareStatement("SELECT * FROM laundryPackage WHERE packageID=?");
                 ps.setString(1, packageID);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
