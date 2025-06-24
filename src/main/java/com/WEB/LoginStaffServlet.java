@@ -65,6 +65,7 @@ private String mapRole(String inputRole) {
                 session.setAttribute("staffID", rs.getInt("staffID"));
                 session.setAttribute("staffName", rs.getString("staffName"));
                 session.setAttribute("staffEmail", rs.getString("staffEmail"));
+                session.setAttribute("staffPassword", rs.getString("staffPassword"));
                 session.setAttribute("staffPhone", rs.getString("staffPhone"));
                 session.setAttribute("role", rs.getString("role"));
                 session.setMaxInactiveInterval(30 * 60); // 30 minutes
