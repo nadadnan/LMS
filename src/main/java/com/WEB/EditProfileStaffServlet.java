@@ -6,9 +6,7 @@ package com.WEB;
 
 import com.DAO.DBUtil;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +24,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "EditProfileStaffServlet", urlPatterns = {"/EditProfileStaffServlet"})
 public class EditProfileStaffServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -51,7 +40,7 @@ public class EditProfileStaffServlet extends HttpServlet {
         String staffName = request.getParameter("staffName");
         String staffPhone = request.getParameter("staffPhone");
         String staffPassword = request.getParameter("staffPassword");
-
+        
         StringBuilder sqlBuilder = new StringBuilder("UPDATE staff SET ");
         List<Object> parameters = new ArrayList<>();
 
@@ -74,7 +63,7 @@ public class EditProfileStaffServlet extends HttpServlet {
             return;
         }
 
-        // Remove last comma and space, then append WHERE clause
+        // Remove the last comma and add WHERE clause
         sqlBuilder.setLength(sqlBuilder.length() - 2);
         sqlBuilder.append(" WHERE staffEmail = ?");
         parameters.add(staffEmail);
@@ -100,6 +89,9 @@ public class EditProfileStaffServlet extends HttpServlet {
             response.sendRedirect("error.jsp");
         }
     }
+    
+    
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
